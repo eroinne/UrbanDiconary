@@ -18,6 +18,7 @@ struct ContentView: View {
     @State var thumbs_up: [Int] = []
     //diconaire pour stocker les definition
     @State var AllreadyDefine = [String]()
+    @State var permaLinks = [String]()
 
 
     
@@ -31,6 +32,7 @@ struct ContentView: View {
             DispatchQueue.main.async {
                 self.definitions = self.api.definitions
                 self.thumbs_up = self.api.thumbs_up
+                self.permaLinks = self.api.permaLinks
                 AllreadyDefine.append(forDefinition)
             
                 
@@ -45,6 +47,11 @@ struct ContentView: View {
 //--------------------Vue recherche---------------------
             
             VStack {
+                    
+                    Text("Urban World Dictonary")
+                        .padding()
+                        .font(.title)
+                
                         // texte editor for search
                        
                        TextEditor(text: $forDefinition)
@@ -56,7 +63,7 @@ struct ContentView: View {
                        
                        Text("Définitions :")
                            .padding()
-                           .font(.title)
+                           .font(.title2)
                 
                        // Show loading indicator or placeholder while definitions is empty
                        ScrollView {
@@ -65,8 +72,17 @@ struct ContentView: View {
                                    Text(definitions[index])
                                        .padding()
                                        .font(.title2)
-                                   Label(String(thumbs_up[index]), systemImage: "hand.thumbsup.fill")
-                                       .padding()
+                                   HStack{
+                                       Label(String(thumbs_up[index]), systemImage: "hand.thumbsup.fill")
+                                           .padding()
+                                       ShareLink(item: permaLinks[index], label: {
+                                           Text("Partager")
+                                               .frame(alignment: .leading)
+                                        
+                                       })
+                                   }
+                                  
+                                   
                                    Divider()
                                }
                            }

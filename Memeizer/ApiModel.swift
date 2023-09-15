@@ -18,6 +18,8 @@ class ApiModel: NSObject {
     @Published var desc: String?
     var definitions: [String] = []
     var thumbs_up : [Int] = []
+    var permaLinks : [String] = []
+    
     
     //recuperer le json
     
@@ -32,6 +34,8 @@ class ApiModel: NSObject {
                         self.definitions = self.getAllDefinitions(desc: description);
                         //recupere les thumbs_up
                         self.thumbs_up = self.getAllThumbs_up(desc: description)
+                        self.permaLinks = self.getAllPermaLinks(desc: description)
+                        
                         
                         completion(.success(()))
                     } catch {
@@ -76,6 +80,18 @@ class ApiModel: NSObject {
                definition.thumbs_up
            }
        }
+    
+    //recuperer les permaLinks
+    func getAllPermaLinks(desc: Description) -> [String] {
+        if desc.list.isEmpty {
+            return ["No permaLinks found"]
+        }
+        return desc.list.enumerated().map { (index, definition) in
+            definition.permalink
+        }
+    }
+    
+    
 
     
     
@@ -89,6 +105,8 @@ class ApiModel: NSObject {
         //recuper la definition du json
         var definition : String
         var thumbs_up : Int
+        var permalink : String
+    
         
     }
     
