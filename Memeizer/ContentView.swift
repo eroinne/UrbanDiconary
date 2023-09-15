@@ -10,11 +10,19 @@ import Alamofire
 
 
 struct ContentView: View {
-
-
+    
+    
     var api: ApiModel = ApiModel()
     @State var forDefinition: String = ""
     @State var definition: String = ""
+    //diconaire pour stocker les definition
+    @State var AllreadyDefinition = [String]()
+
+
+    
+    
+    
+    
     
     //fonction pour recuperer la definition
     func Description() {
@@ -24,45 +32,67 @@ struct ContentView: View {
             DispatchQueue.main.async {
                 self.definition = description ?? "No definition found"
                 print(self.definition)
+                AllreadyDefinition.append(forDefinition)
+            
+                
             }
         }
     }
-
     
- 
+    
+    
     var body: some View {
-     
-        VStack{
-            
-            // entre de text pour la definition
-            TextEditor(text: $forDefinition)
-                .multilineTextAlignment(.center)
-                .padding()
-                .border(Color.black)
-                .frame(width: 300, height: 80)
-            //label avec ecirt definition
-            
-            Text("Deffinition : ")
-                .padding()
-                .font(.title2)
-            
-            //affichage de la definition
-            
-            Text($definition.wrappedValue)
-                .padding()
-                .font(.title3)
-            
-            //bouton pour lancer la requete
-            Button("Deffinir") {
-               Description()
-              
+        TabView{
+            // vue recherche
+            VStack{
+                
+                // entre de text pour la definition
+                TextEditor(text: $forDefinition)
+                    .multilineTextAlignment(.center)
+                    .padding(.top)
+                    .border(Color.black)
+                    .frame(width: 300, height: 80)
+                //label avec ecirt definition
+                
+                Text("Deffinition : ")
+                    .padding()
+                    .font(.title2)
+                
+                //affichage de la definition
+                
+                Text($definition.wrappedValue)
+                    .padding()
+                    .font(.title3)
+                
+                //bouton pour lancer la requete
+                Button("Deffinir") {
+                    Description()
+                   
+                }
+                //.padding()
+                //Spacer que en bas
+                
             }
-            
-        }
-        .padding()
-    }
+            .tabItem {
+                Label("recherche", systemImage: "magnifyingglass")
+            }
+            //--------------------Vue historique---------------------
+            NavigationStack{
+                List(AllreadyDefinition, id: \.self) { mots in
+                    NavigationLink(value: mots) {
+                        Text(mots)
+                    }
+                }.navigationBarTitle("Historique")
+            }.tabItem {
+            Label("historique", systemImage: "list.dash")
+            }
 
+        }
+        
+    }
+    
 }
+
 
 
 struct ContentView_Previews: PreviewProvider {
