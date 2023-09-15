@@ -15,12 +15,11 @@ struct ContentView: View {
     var api: ApiModel = ApiModel()
     @State var forDefinition: String = ""
     @State private var definitions: [String] = []
+    @State var thumbs_up: [Int] = []
     //diconaire pour stocker les definition
     @State var AllreadyDefine = [String]()
 
 
-    
-    
     
     
     
@@ -31,6 +30,7 @@ struct ContentView: View {
             // Update the UI on the main thread
             DispatchQueue.main.async {
                 self.definitions = self.api.definitions
+                self.thumbs_up = self.api.thumbs_up
                 AllreadyDefine.append(forDefinition)
             
                 
@@ -42,24 +42,32 @@ struct ContentView: View {
     
     var body: some View {
         TabView{
-            // vue recherche
+//--------------------Vue recherche---------------------
+            
             VStack {
+                        // texte editor for search
+                       
                        TextEditor(text: $forDefinition)
                            .multilineTextAlignment(.center)
                            .padding()
                            .border(Color.black)
                            .frame(width: 300, height: 80)
+                
                        
                        Text("Définitions :")
                            .padding()
                            .font(.title)
-                       
+                
+                       // Show loading indicator or placeholder while definitions is empty
                        ScrollView {
                            VStack(alignment: .leading, spacing: 10) {
                                ForEach(0..<definitions.count, id: \.self) { index in
                                    Text(definitions[index])
                                        .padding()
                                        .font(.title2)
+                                   Label(String(thumbs_up[index]), systemImage: "hand.thumbsup.fill")
+                                       .padding()
+                                   Divider()
                                }
                            }
                        }
@@ -68,16 +76,20 @@ struct ContentView: View {
                            getDescription()
                        }
                    }
+            
             .tabItem {
                 Label("Recherche", systemImage: "magnifyingglass")
             }
-            //--------------------Vue historique---------------------
+//--------------------Vue historique---------------------
             NavigationStack{
+                //liste des mots rechercher
                 List(AllreadyDefine, id: \.self) { mots in
                     NavigationLink(value: mots) {
                         Text(mots)
                     }
-                }.navigationBarTitle("Historique")
+                }
+                .navigationBarTitle("Historique")
+                //vue de la definition
                 .navigationDestination(for: String.self){ item in
                     RandomWroldView(item)
                     }

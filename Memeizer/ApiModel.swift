@@ -17,6 +17,9 @@ class ApiModel: NSObject {
     var allDescirption : Description?
     @Published var desc: String?
     var definitions: [String] = []
+    var thumbs_up : [Int] = []
+    
+    //recuperer le json
     
     func getURLDiconary(mots: String, completion: @escaping (Result<Void,Error>) -> Void) {
         AF.request("https://api.urbandictionary.com/v0/define?term=" + mots).responseJSON { response in
@@ -25,7 +28,12 @@ class ApiModel: NSObject {
                 if let jsonData = try? JSONSerialization.data(withJSONObject: data, options: []) {
                     do {
                         let description = try JSONDecoder().decode(Description.self, from: jsonData)
-                        self.definitions = self.getAllDefinitions(desc: description);                         completion(.success(()))
+                        //recupere les definition
+                        self.definitions = self.getAllDefinitions(desc: description);
+                        //recupere les thumbs_up
+                        self.thumbs_up = self.getAllThumbs_up(desc: description)
+                        
+                        completion(.success(()))
                     } catch {
                         print("Error decoding JSON: \(error)")
                         completion(.failure(error))
@@ -56,6 +64,18 @@ class ApiModel: NSObject {
                "Définition n°\(index + 1):\n\n \(definition.definition)"
            }
        }
+    
+    
+    
+    // Recupere toute les thumbs_up du mots
+       func getAllThumbs_up(desc: Description) -> [Int] {
+           if desc.list.isEmpty {
+               return [0]
+           }
+           return desc.list.enumerated().map { (index, definition) in
+               definition.thumbs_up
+           }
+       }
 
     
     
@@ -68,7 +88,7 @@ class ApiModel: NSObject {
     struct Definition: Codable {
         //recuper la definition du json
         var definition : String
-        
+        var thumbs_up : Int
         
     }
     
