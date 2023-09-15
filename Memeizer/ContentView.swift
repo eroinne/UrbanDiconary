@@ -15,12 +15,13 @@ struct ContentView: View {
     var api: ApiModel = ApiModel()
     @State var forDefinition: String = ""
     @State var definition: String = ""
-
     
     //fonction pour recuperer la definition
-    func Description() async throws  {
-        try? await api.getDescriptionAfterURL(mots: forDefinition)
+    func Description()  {
+        definition = api.getURLDiconary(mots: forDefinition)
+        print(definition)
        // definition = api.getFirstDeinition()
+      
     
      
     
@@ -54,9 +55,7 @@ struct ContentView: View {
             
             //bouton pour lancer la requete
             Button("Deffinir") {
-                Task {
-                    try await Description()
-                }
+               Description()
               
             }
             
