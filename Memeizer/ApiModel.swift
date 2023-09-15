@@ -16,28 +16,25 @@ class ApiModel: NSObject {
     var urlDiconary: URL?
     var allDescirption : Description?
     @Published var desc: String?
-
+    var definitions: [String] = []
     
-    func getURLDiconary(mots: String, completion: @escaping (String?) -> Void) {
+    func getURLDiconary(mots: String, completion: @escaping (Result<Void,Error>) -> Void) {
         AF.request("https://api.urbandictionary.com/v0/define?term=" + mots).responseJSON { response in
             switch response.result {
             case .success(let data):
                 if let jsonData = try? JSONSerialization.data(withJSONObject: data, options: []) {
                     do {
                         let description = try JSONDecoder().decode(Description.self, from: jsonData)
-                        let firstDefinition = self.getFirstDeinition(desc: description)
-                        completion(firstDefinition)
+                        self.definitions = self.getAllDefinitions(desc: description);                         completion(.success(()))
                     } catch {
                         print("Error decoding JSON: \(error)")
-                        completion(nil)
+                        completion(.failure(error))
                     }
-                } else {
-                    print("Error converting response data to JSON")
-                    completion(nil)
+                    
                 }
-            case .failure(let error):
-                print("Request failed with error: \(error)")
-                completion(nil)
+            case .failure(_):
+                completion(.failure(response.error!))
+            
             }
         }
     }
@@ -50,7 +47,16 @@ class ApiModel: NSObject {
         return desc.list.first?.definition ?? "No definition found"
     }
     
-    
+    // Recupere toute les definition du mots
+       func getAllDefinitions(desc: Description) -> [String] {
+           if desc.list.isEmpty {
+               return ["definition not found"]
+           }
+           return desc.list.enumerated().map { (index, definition) in
+               "Définition n°\(index + 1):\n\n \(definition.definition)"
+           }
+       }
+
     
     
     

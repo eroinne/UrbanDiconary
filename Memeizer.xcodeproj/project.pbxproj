@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1E4536082AB492FC00EAAFD6 /* RandomWroldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4536072AB492FC00EAAFD6 /* RandomWroldView.swift */; };
 		1EA3FB2B2AAB61FC00C42DFC /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 1EA3FB2A2AAB61FC00C42DFC /* Alamofire */; };
 		1EF2F53D2AAB4B70002C5D38 /* MemeizerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF2F53C2AAB4B70002C5D38 /* MemeizerApp.swift */; };
 		1EF2F53F2AAB4B70002C5D38 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF2F53E2AAB4B70002C5D38 /* ContentView.swift */; };
@@ -36,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1E4536072AB492FC00EAAFD6 /* RandomWroldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomWroldView.swift; sourceTree = "<group>"; };
 		1EF2F5392AAB4B70002C5D38 /* Memeizer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Memeizer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1EF2F53C2AAB4B70002C5D38 /* MemeizerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemeizerApp.swift; sourceTree = "<group>"; };
 		1EF2F53E2AAB4B70002C5D38 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 				1EF2F5662AAB50B3002C5D38 /* ApiModel.swift */,
 				1EF2F5402AAB4B72002C5D38 /* Assets.xcassets */,
 				1EF2F5422AAB4B72002C5D38 /* Preview Content */,
+				1E4536072AB492FC00EAAFD6 /* RandomWroldView.swift */,
 			);
 			path = Memeizer;
 			sourceTree = "<group>";
@@ -268,6 +271,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1E4536082AB492FC00EAAFD6 /* RandomWroldView.swift in Sources */,
 				1EF2F53F2AAB4B70002C5D38 /* ContentView.swift in Sources */,
 				1EF2F5672AAB50B3002C5D38 /* ApiModel.swift in Sources */,
 				1EF2F53D2AAB4B70002C5D38 /* MemeizerApp.swift in Sources */,

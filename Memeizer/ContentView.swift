@@ -14,9 +14,9 @@ struct ContentView: View {
     
     var api: ApiModel = ApiModel()
     @State var forDefinition: String = ""
-    @State var definition: String = ""
+    @State private var definitions: [String] = []
     //diconaire pour stocker les definition
-    @State var AllreadyDefinition = [String]()
+    @State var AllreadyDefine = [String]()
 
 
     
@@ -25,14 +25,13 @@ struct ContentView: View {
     
     
     //fonction pour recuperer la definition
-    func Description() {
+    func getDescription() {
         // Call getURLDiconary with a completion handler
         self.api.getURLDiconary(mots: forDefinition) { description in
             // Update the UI on the main thread
             DispatchQueue.main.async {
-                self.definition = description ?? "No definition found"
-                print(self.definition)
-                AllreadyDefinition.append(forDefinition)
+                self.definitions = self.api.definitions
+                AllreadyDefine.append(forDefinition)
             
                 
             }
@@ -44,54 +43,54 @@ struct ContentView: View {
     var body: some View {
         TabView{
             // vue recherche
-            VStack{
-                
-                // entre de text pour la definition
-                TextEditor(text: $forDefinition)
-                    .multilineTextAlignment(.center)
-                    .padding(.top)
-                    .border(Color.black)
-                    .frame(width: 300, height: 80)
-                //label avec ecirt definition
-                
-                Text("Deffinition : ")
-                    .padding()
-                    .font(.title2)
-                
-                //affichage de la definition
-                
-                Text($definition.wrappedValue)
-                    .padding()
-                    .font(.title3)
-                
-                //bouton pour lancer la requete
-                Button("Deffinir") {
-                    Description()
-                   
-                }
-                //.padding()
-                //Spacer que en bas
-                
-            }
+            VStack {
+                       TextEditor(text: $forDefinition)
+                           .multilineTextAlignment(.center)
+                           .padding()
+                           .border(Color.black)
+                           .frame(width: 300, height: 80)
+                       
+                       Text("Définitions :")
+                           .padding()
+                           .font(.title)
+                       
+                       ScrollView {
+                           VStack(alignment: .leading, spacing: 10) {
+                               ForEach(0..<definitions.count, id: \.self) { index in
+                                   Text(definitions[index])
+                                       .padding()
+                                       .font(.title2)
+                               }
+                           }
+                       }
+                       
+                       Button("Définir") {
+                           getDescription()
+                       }
+                   }
             .tabItem {
-                Label("recherche", systemImage: "magnifyingglass")
+                Label("Recherche", systemImage: "magnifyingglass")
             }
             //--------------------Vue historique---------------------
             NavigationStack{
-                List(AllreadyDefinition, id: \.self) { mots in
+                List(AllreadyDefine, id: \.self) { mots in
                     NavigationLink(value: mots) {
                         Text(mots)
                     }
                 }.navigationBarTitle("Historique")
+                .navigationDestination(for: String.self){ item in
+                    RandomWroldView(item)
+                    }
             }.tabItem {
-            Label("historique", systemImage: "list.dash")
+            Label("Historique", systemImage: "book")
+            }
             }
 
         }
         
     }
     
-}
+
 
 
 
