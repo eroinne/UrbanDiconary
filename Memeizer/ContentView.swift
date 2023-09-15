@@ -17,16 +17,15 @@ struct ContentView: View {
     @State var definition: String = ""
     
     //fonction pour recuperer la definition
-    func Description()  {
-        definition = api.getURLDiconary(mots: forDefinition)
-        print(definition)
-       // definition = api.getFirstDeinition()
-      
-    
-     
-    
-    
-
+    func Description() {
+        // Call getURLDiconary with a completion handler
+        self.api.getURLDiconary(mots: forDefinition) { description in
+            // Update the UI on the main thread
+            DispatchQueue.main.async {
+                self.definition = description ?? "No definition found"
+                print(self.definition)
+            }
+        }
     }
 
     
@@ -51,7 +50,7 @@ struct ContentView: View {
             
             Text($definition.wrappedValue)
                 .padding()
-                .font(.title2)
+                .font(.title3)
             
             //bouton pour lancer la requete
             Button("Deffinir") {

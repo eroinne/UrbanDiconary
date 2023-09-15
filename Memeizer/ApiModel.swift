@@ -15,39 +15,34 @@ class ApiModel: NSObject {
     
     var urlDiconary: URL?
     var allDescirption : Description?
-    @Published var desc: String? = " "
+    @Published var desc: String?
+
     
-    
-    
-    
-    
-    
-    
-    
-    
-    //fonction pour fair appel a l'api
-    func getURLDiconary(mots : String )-> String {
-        AF.request("https://api.urbandictionary.com/v0/define?term=" + mots).response { response in
+    func getURLDiconary(mots: String, completion: @escaping (String?) -> Void) {
+        AF.request("https://api.urbandictionary.com/v0/define?term=" + mots).responseJSON { response in
             switch response.result {
             case .success(let data):
-                do {
-                    let description = try JSONDecoder().decode(Description.self, from: data!)
-                    // Handle the description as needed
-                    self.allDescirption = description  // Update allDescirption with the decoded description
-                    self.desc = self.getFirstDeinition(desc: description)
-                  
-                } catch {
-                    print("Error decoding JSON: \(error)")
+                if let jsonData = try? JSONSerialization.data(withJSONObject: data, options: []) {
+                    do {
+                        let description = try JSONDecoder().decode(Description.self, from: jsonData)
+                        let firstDefinition = self.getFirstDeinition(desc: description)
+                        completion(firstDefinition)
+                    } catch {
+                        print("Error decoding JSON: \(error)")
+                        completion(nil)
+                    }
+                } else {
+                    print("Error converting response data to JSON")
+                    completion(nil)
                 }
             case .failure(let error):
                 print("Request failed with error: \(error)")
+                completion(nil)
             }
         }
-        return self.desc!
-    
-    
     }
 
+    
     
     //recuper la premier definition
     func getFirstDeinition(desc : Description)-> String {
