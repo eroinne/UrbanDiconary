@@ -15,22 +15,23 @@ struct RandomWroldView: View {
     @State private var itemDef = [String]()  // Use @State to trigger UI updates
     @State var permaLinks = [String]()
     @State var show = false
-    
-    
-    
 
     init(_ item: String) {
         self.item = item
     }
     
     var body: some View {
-        VStack {
+        VStack(spacing:0){
             // Show the word
             Text(item)
-                .font(.title)
                 .bold()
                 .multilineTextAlignment(.center)
                 .padding()
+                .font(.title)
+                .frame(maxWidth: .infinity)
+                .background(Color(hex: 0x1b2936))
+                .foregroundStyle(.white)
+
             
             // Show loading indicator or placeholder while itemDef is empty
             if itemDef.isEmpty {
@@ -52,18 +53,21 @@ struct RandomWroldView: View {
                                     ShareLink(item: permaLinks[index], label: {
                                         Text("Partager")
                                             .frame(alignment: .leading)
-                                        Divider()
                                     })
                                 }
                             }
+                            Divider()
                         }
                     }
-                }
+                }.frame(maxWidth: .infinity)
+                .background(Color(hex: 0xeeeeee))
+                .padding(.bottom, 10)
             }
         }
+        
         .onAppear {
-            // Call getURLDiconary and update itemDef and thumbs_up
-            api.getURLDiconary(mots: item) { description in
+            // Call getUrlDictionary and update itemDef and thumbs_up
+            api.getUrlDictionary(mots: item) { description in
                 DispatchQueue.main.async {
                     itemDef = api.definitions
                     if(self.itemDef[0] !=  "definition not found"){

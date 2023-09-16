@@ -4,26 +4,21 @@
 //
 //  Created by Ero on 08/09/2023.
 //
-
 import Foundation
 import Alamofire
 import SwiftUI
 
-
-
+// Class that manage and handle the api calls
 class ApiModel: NSObject {
     
-    var urlDiconary: URL?
-    var allDescirption : Description?
     @Published var desc: String?
     var definitions: [String] = []
     var thumbs_up : [Int] = []
     var permaLinks : [String] = []
     
-    
-    //recuperer le json
-    
-    func getURLDiconary(mots: String, completion: @escaping (Result<Void,Error>) -> Void) {
+    // Get the Json
+    func getUrlDictionary(mots: String, completion: @escaping (Result<Void,Error>) -> Void) {
+        let mots = mots.replacingOccurrences(of: " ", with: "%20")
         AF.request("https://api.urbandictionary.com/v0/define?term=" + mots).responseJSON { response in
             switch response.result {
             case .success(let data):
@@ -50,28 +45,18 @@ class ApiModel: NSObject {
             }
         }
     }
-
     
-    
-    //recuper la premier definition
-    func getFirstDeinition(desc : Description)-> String {
-        // renvois la definition , en utilisan la preiemr definition du json trouver
-        return desc.list.first?.definition ?? "No definition found"
-    }
-    
-    // Recupere toute les definition du mots
+    // Get all the definitions of the searched word
        func getAllDefinitions(desc: Description) -> [String] {
            if desc.list.isEmpty {
                return ["definition not found"]
            }
            return desc.list.enumerated().map { (index, definition) in
-               "Définition n°\(index + 1):\n\n \(definition.definition)"
+               "Définition n°\(index + 1)\n\n \(definition.definition)"
            }
        }
     
-    
-    
-    // Recupere toute les thumbs_up du mots
+    // Get all the thumbs_up of the definition
        func getAllThumbs_up(desc: Description) -> [Int] {
            if desc.list.isEmpty {
                return [0]
@@ -81,7 +66,7 @@ class ApiModel: NSObject {
            }
        }
     
-    //recuperer les permaLinks
+    // Get the permalink of the definition
     func getAllPermaLinks(desc: Description) -> [String] {
         if desc.list.isEmpty {
             return ["No permaLinks found"]
@@ -91,26 +76,14 @@ class ApiModel: NSObject {
         }
     }
     
-    
-
-    
-    
-    
     struct Description: Codable {
         var list: [Definition]
     }
-
     
     struct Definition: Codable {
         //recuper la definition du json
         var definition : String
         var thumbs_up : Int
         var permalink : String
-    
-        
     }
-    
 }
-    
-    
-    
