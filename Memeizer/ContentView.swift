@@ -19,6 +19,8 @@ struct ContentView: View {
     //diconaire pour stocker les definition
     @State var AllreadyDefine = [String]()
     @State var permaLinks = [String]()
+    @State var show = false
+    
 
 
     
@@ -26,15 +28,29 @@ struct ContentView: View {
     
     //fonction pour recuperer la definition
     func getDescription() {
+        
         // Call getURLDiconary with a completion handler
         self.api.getURLDiconary(mots: forDefinition) { description in
             // Update the UI on the main thread
             DispatchQueue.main.async {
+                thumbs_up.removeAll()
+                permaLinks.removeAll()
+                
                 self.definitions = self.api.definitions
-                self.thumbs_up = self.api.thumbs_up
-                self.permaLinks = self.api.permaLinks
-                AllreadyDefine.append(forDefinition)
-            
+                if(self.definitions[0] !=  "definition not found"){
+                    show = true
+                    self.thumbs_up = self.api.thumbs_up
+                    self.permaLinks = self.api.permaLinks
+                    if(!AllreadyDefine.contains(forDefinition)){
+                        AllreadyDefine.append(forDefinition)
+                    }
+                }
+                else if (forDefinition.replacingOccurrences(of: " ", with: "") == "") {
+                    definitions[0] = "remplie un truck batard !"
+                }
+                else {
+                show = false
+                }
                 
             }
         }
@@ -73,16 +89,17 @@ struct ContentView: View {
                                        .padding()
                                        .font(.title2)
                                    HStack{
-                                       Label(String(thumbs_up[index]), systemImage: "hand.thumbsup.fill")
-                                           .padding()
-                                       ShareLink(item: permaLinks[index], label: {
-                                           Text("Partager")
-                                               .frame(alignment: .leading)
-                                        
-                                       })
+                                       if(show){
+                                           Label(String(thumbs_up[index]), systemImage: "hand.thumbsup.fill")
+                                               .padding()
+                                           ShareLink(item: permaLinks[index], label: {
+                                               Text("Partager")
+                                                   .frame(alignment: .leading)
+                                               
+                                           })
+                                       }
+                                       
                                    }
-                                  
-                                   
                                    Divider()
                                }
                            }

@@ -13,6 +13,11 @@ struct RandomWroldView: View {
     var item : String
     @State var thumbs_up: [Int] = []
     @State private var itemDef = [String]()  // Use @State to trigger UI updates
+    @State var permaLinks = [String]()
+    @State var show = false
+    
+    
+    
 
     init(_ item: String) {
         self.item = item
@@ -39,23 +44,35 @@ struct RandomWroldView: View {
                             Text(itemDef[index])
                                 .padding()
                                 .font(.title2)
-                            
-                            // Show the number of thumbs up + icon
-                            Label(String(thumbs_up[index]), systemImage: "hand.thumbsup.fill")
-                                .padding()
-                            Divider()
-                        }
+                            HStack{
+                                if(show){
+                                    // Show the number of thumbs up + icon
+                                    Label(String(thumbs_up[index]), systemImage: "hand.thumbsup.fill")
+                                        .padding()
+                                    ShareLink(item: permaLinks[index], label: {
+                                        Text("Partager")
+                                            .frame(alignment: .leading)
+                                        Divider()
+                                    })
+                                }
+                            }
                         }
                     }
                 }
             }
-        
+        }
         .onAppear {
             // Call getURLDiconary and update itemDef and thumbs_up
             api.getURLDiconary(mots: item) { description in
                 DispatchQueue.main.async {
                     itemDef = api.definitions
-                    self.thumbs_up = self.api.thumbs_up
+                    if(self.itemDef[0] !=  "definition not found"){
+                        show = true
+                        self.thumbs_up = self.api.thumbs_up
+                        self.permaLinks = self.api.permaLinks
+                    }else {
+                        show = false
+                    }
                 }
             }
         }
