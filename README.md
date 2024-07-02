@@ -1,3 +1,2 @@
 # UrbanDiconary
-Voici une applicaiton cree pour traduire est comprendre les mots du langague commun utiliser, cette aplciaito nestt une aplciaiton basic pour developper pour appendre Xcode est le swift cette aplicaiton fais apelle a l'api de urbanDiconary pour traduire les mots.
-
+Voici une application créée pour traduire et comprendre les mots du langage courant utilisé. Cette application est une application basique développée pour apprendre Xcode et Swift. Elle fait appel à l'API d'Urban Dictionary pour traduire les mots.
